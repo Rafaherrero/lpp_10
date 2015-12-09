@@ -19,7 +19,6 @@ module RefBiblio
 			#isbn.each do |i|
 			#	raise ArgumentError, "Uno de los ISBN no es un string" unless i.is_a?(String)
 			#end
-			@titulo = titulo
 			@editorial = editorial
 			@publicacion = publicacion
 			str=""
@@ -36,15 +35,53 @@ module RefBiblio
 				str+=" & " unless a == autor.last
 			end
 			@autor = str
+			
+			tit = titulo.split(' ')
+			tit.each do |word|
+				if word.length > 3
+					word.capitalize!
+				else
+					word.downcase!
+				end
+				if word == tit[0]
+					word.capitalize!
+				end
+			end
+
+			@titulo = tit.join(' ')
 		end
 
 		def <=> (otro)
-			@publicacion <=> otro.publicacion
+			if(@autor == otro.autor)
+				if(@publicacion == otro.publicacion)
+					if(@titulo == otro.titulo)
+						return 0
+					else
+						arr = [@titulo, otro.titulo]
+						arr.sort_by!{|t| t.downcase}
+						if(arr.first == @titulo)
+							return 1
+						end
+						return -1
+					end
+				elsif publicacion > otro.publicacion
+					return -1
+				else
+					return 1
+				end
+			else
+				arr = [@autor, otro.autor]
+				arr.sort_by!{|t| t.downcase}
+				if(arr.first == @autor)
+					return -1
+				end
+				return 1
+			end
 		end
 	end
 	
 	class Libro < Referencia
-		attr_accessor :edicion, :editorial, :volumen
+		attr_accessor :edicion, :volumen
 		def initialize(autor, titulo, editorial, publicacion, edicion, volumen)
 			super(autor,titulo,editorial,publicacion)
 			@edicion = edicion
@@ -66,34 +103,6 @@ module RefBiblio
 		end
 	end
 	
-	
-	class ArtRevista < Periodicas
-		attr_accessor :pagina
-		def initialize(autor, titulo, editorial, publicacion, tituloarticulo, numero, issn, pagina)
-			super(autor,titulo,editorial,publicacion, tituloarticulo, numero, issn)
-			@pagina = pagina
-		end
-		
-		def to_s
-			final = ""
-			autor.each do |a|
-				final << a
-				final << ', ' unless a == autor.last
-			end
-			final << ".\n"
-			final << titulo << "\n"
-			final << editorial << "; "
-			final << "(" << Date::MONTHNAMES[publicacion.month] << " " << publicacion.day.to_s << ", " << publicacion.year.to_s << ")\n"
-			final << tituloarticulo << "\n"
-			final << numero.to_s << "\n"
-			final << "ISSN: " << issn[0] << "\n"
-			pagina.each do |b|
-				final << b
-				final << ', ' unless b == pagina.last
-			end
-			return final
-		end
-	end
 		
 	class ArtPeriodico < Periodicas
 		attr_accessor :seccion, :pagina
