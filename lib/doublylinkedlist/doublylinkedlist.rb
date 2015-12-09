@@ -125,5 +125,21 @@ module Doublylinkedlist
 				copia = copia[:sig]
 			end
 		end
+		def ordenar! 
+			cambio = true
+			while cambio
+				cambio = false
+				i = @inicio
+				i_1 = @inicio[:sig]
+				while i_1 != nil
+					if(i[:valor] > i_1[:valor])
+						i[:valor], i_1[:valor] = i_1[:valor], i[:valor]
+						cambio = true
+					end
+					i = i_1
+					i_1 = i_1[:sig]
+				end
+			end
+		end
 	end
 end

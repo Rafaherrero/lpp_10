@@ -19,48 +19,41 @@ module RefBiblio
 			#isbn.each do |i|
 			#	raise ArgumentError, "Uno de los ISBN no es un string" unless i.is_a?(String)
 			#end
-
-			@autor = autor
 			@titulo = titulo
 			@editorial = editorial
 			@publicacion = publicacion
+			str=""
+			autor.each do |a|
+				separar = a.split(/\W+/)
+				str+=separar[1]
+				str+=", "
+				unless separar[2].nil?
+					str+=separar[2][0]
+					str+=". "
+				end
+				str+=separar[0][0]
+				str+="."
+				str+=" & " unless a == autor.last
+			end
+			@autor = str
 		end
-		
+
 		def <=> (otro)
 			@publicacion <=> otro.publicacion
 		end
 	end
 	
 	class Libro < Referencia
-		attr_accessor :edicion, :isbn, :serie
-		def initialize(autor, titulo, editorial, publicacion, edicion, isbn, serie=nil)
+		attr_accessor :edicion, :editorial, :volumen
+		def initialize(autor, titulo, editorial, publicacion, edicion, volumen)
 			super(autor,titulo,editorial,publicacion)
 			@edicion = edicion
-			@isbn = isbn
-			@serie = serie
+			@volumen = volumen
 		end
-			
-			def to_s
-			final = ""
-			autor.each do |a|
-				final << a
-				final << ', ' unless a == autor.last
-			end
-			final << ".\n"
-			final << titulo << "\n"
-			final << serie << "\n" unless serie == nil
-			final << editorial << "; " << edicion.to_s << " edition "
-			final << "(" << Date::MONTHNAMES[publicacion.month] << " " << publicacion.day.to_s << ", " << publicacion.year.to_s << ")\n"
-			isbn.each do |i|
-				if(i.length < 12)
-					final << "ISBN-10: " << i
-				else
-					final << "ISBN-13: " << i
-				end
-				final << "\n" unless i == isbn.last
-			end
-			return final
-			end
+		def to_s
+			string=""
+			string  << @autor << " (" << Date::MONTHNAMES[publicacion.month] << " " << publicacion.day.to_s << ", " << publicacion.year.to_s << "). " << @titulo << " (" << @edicion.to_s << ") (" << @volumen.to_s << "). " << @editorial << "."
+		end
 	end
 	
 	class Periodicas < Referencia

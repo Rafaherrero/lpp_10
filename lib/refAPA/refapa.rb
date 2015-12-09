@@ -8,7 +8,7 @@ module RefAPA
 		end
 		def insertar(ref)
 			@lista.insertar_final(ref)
-			@lista.sort!
+			@lista.ordenar!
 		end
 		def each
 			@lista.each{ |i| yield i}

@@ -1,5 +1,5 @@
 require "spec_helper"
-
+=begin
 describe RefBiblio::Referencia do
 	before :each do
 		@lista1 = Doublylinkedlist::Doublylinkedlist.new
@@ -600,10 +600,5 @@ describe RefBiblio::DocElectronico do
 end
 
 end
-=begin
-
-	
-	
-
 
 =end
