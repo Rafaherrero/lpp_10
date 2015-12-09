@@ -116,14 +116,17 @@ module RefBiblio
 	end
 	
 	class DocElectronico < Periodicas
-		attr_accessor :formato, :url
-		def initialize(autor, titulo, editorial, publicacion, tituloarticulo, numero, issn, formato, url)
-			super(autor,titulo,editorial,publicacion, tituloarticulo, numero, issn)
-			@formato = formato
+		attr_accessor :formato, :url, :fechacceso
+		def initialize(autor, titulo, editorial, edicion, publicacion, formato, url, fechacceso)
+			super(autor,titulo,editorial,publicacion, formato)
 			@url = url
+			@fechacceso = fechacceso
+			@edicion = edicion
 		end
 		
 		def to_s
+			string = ""
+			string << @autor << " (" << Date::MONTHNAMES[publicacion.month] << " " << publicacion.day.to_s << ", " << publicacion.year.to_s << "). " << @titulo << @formato << ". " << @editorial << ": " << @edicion << ". Disponible en: " << @url << " (" << Date::MONTHNAMES[fechacceso.month] << " " << fechacceso.day.to_s << ", " << fechacceso.year.to_s << "). "
 		end
 	end
 end
