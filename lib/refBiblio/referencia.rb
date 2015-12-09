@@ -94,43 +94,24 @@ module RefBiblio
 	end
 	
 	class Periodicas < Referencia
-		attr_accessor :issn, :numero, :tituloarticulo
-		def initialize(autor, titulo, editorial, publicacion, tituloarticulo, numero, issn)
+		attr_accessor :formato
+		def initialize(autor, titulo, editorial, publicacion, formato)
 			super(autor,titulo,editorial,publicacion)
-			@tituloarticulo = tituloarticulo
-			@numero = numero
-			@issn = issn
+			@formato=formato.capitalize
 		end
 	end
-	
-		
+
 	class ArtPeriodico < Periodicas
-		attr_accessor :seccion, :pagina
-		def initialize(autor, titulo, editorial, publicacion, tituloarticulo, numero, issn, seccion, pagina)
-			super(autor,titulo,editorial,publicacion, tituloarticulo, numero, issn)
-			@seccion = seccion
-			@pagina = pagina
+		attr_accessor :paginas, :formato
+		def initialize(autor, titulo, publicacion, editorial, paginas)
+			formato="Papel"
+			super(autor,titulo,editorial,publicacion,formato)
+			@paginas = paginas
 		end
 		
 		def to_s
-			final = ""
-			autor.each do |a|
-				final << a
-				final << ', ' unless a == autor.last
-			end
-			final << ".\n"
-			final << titulo << "\n"
-			final << editorial << "; "
-			final << "(" << Date::MONTHNAMES[publicacion.month] << " " << publicacion.day.to_s << ", " << publicacion.year.to_s << ")\n"
-			final << tituloarticulo << "\n"
-			final << numero.to_s << "\n"
-			final << "ISSN: " << issn[0] << "\n"
-			final << "Seccion: " << seccion << "\n"
-			pagina.each do |b|
-				final << b
-				final << ', ' unless b == pagina.last
-			end
-			return final
+			string = ""
+			string << @autor << " (" << Date::MONTHNAMES[publicacion.month] << " " << publicacion.day.to_s << ", " << publicacion.year.to_s << "). " << @titulo << ". " << @editorial << ", pp. " << @paginas.to_s << "."
 		end
 	end
 	
@@ -143,22 +124,6 @@ module RefBiblio
 		end
 		
 		def to_s
-			final = ""
-			autor.each do |a|
-				final << a
-				final << ', ' unless a == autor.last
-			end
-			final << ".\n"
-			final << titulo << "\n"
-			final << editorial << "; "
-			final << "(" << Date::MONTHNAMES[publicacion.month] << " " << publicacion.day.to_s << ", " << publicacion.year.to_s << ")\n"
-			final << tituloarticulo << "\n"
-			final << numero.to_s << "\n"
-			final << "ISSN: " << issn[0] << "\n"
-			final << "Formato: " << formato
-			final << " URL: " << url << "\n"
-
-			return final
 		end
 	end
 end
